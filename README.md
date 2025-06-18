@@ -53,3 +53,8 @@ This report is generate using some samples from [this paper](https://bmcbioinfor
 * [Sample report](https://zymo-research.github.io/pipeline-resources/reports/metatranscriptome_sample_report.html)<br>
 This report is generate using some samples from [this paper](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5187186).
 * [Report documentation](report_docs/metatranscriptome_documentation.md)
+
+## Viralrecon (Illumina)
+* [About page](about_pages/about_aladdin_viralrecon_illumina.md)
+* [Sample report](https://zymo-research.github.io/pipeline-resources/reports/aladdin_viralrecon_illumina_sample_report.html)<br>
+* [Report documentation](report_docs/viralrecon_illumina_documentation.md)

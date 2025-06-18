@@ -47,21 +47,23 @@ Other statistics you can get from this tables are (from left to right):
 3. Percentages of reads passing filters after trimming. A good indicator of quality read is > 90%.
 4. Percentages of reads that are duplicates. Duplicate reads
 
+![MultiQC - General statistics table](../images/aladdin-viralrecon-illumina/mqc_general_stats_plot.png)
+
 ## Sample processing
 
 ### FastQC
-[FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/) gives general quality metrics about your reads. It provides information about the quality score distribution across your reads (in [section `Sequence Quality Histograms`](reports/aladdin_viralrecon_illumina_sample_report.html#fastqc_per_base_sequence_quality)), the per base sequence content (%A/C/G/T)(in [section `Per Base Sequence Content`](reports/aladdin_viralrecon_illumina_sample_report.html#fastqc_per_base_sequence_content)). You get information about adapter contamination (in [section `Adapter Content`](reports/aladdin_viralrecon_illumina_sample_report.html#fastqc_adapter_content)) and other overrepresented sequences (in [section `Overrepresented sequences`](reports/aladdin_viralrecon_illumina_sample_report.html#fastqc_overrepresented_sequences)). Some sections will sometimes issue warnings that your samples failed QC. It is important to remember that these QC metrics are from the raw reads, and there are often reasonable explanations why the raw RNAseq reads failed these QC. One frequent warning you might see is in the `Per Base Sequence Content` section (see below). The presence of adapter sequences at 5' or 3' end could trigger these warnings. These adapter sequences are trimmed off before alignment, so there is no need to worry about them in the raw reads. Random primers that are often used in RNAseq kits can trigger these warning too, because these primers are not truly random. Another frequent warning you might see is in the [`Per Sequence GC Content` section](reports/aladdin_viralrecon_illumina_sample_report.html#fastqc_per_sequence_gc_content). This is because of the presence of significant amount of rRNA, which has a different GC content than rest of the genome. The presence of rRNA is not ideal, but does not prevent you from using the rest of the reads just fine, unless rRNA dominates the libraries.
+[FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/) gives general quality metrics about your reads. It provides information about the quality score distribution across your reads (in [section `Sequence Quality Histograms`](../reports/aladdin_viralrecon_illumina_sample_report.html#fastqc_per_base_sequence_quality)), the per base sequence content (%A/C/G/T)(in [section `Per Base Sequence Content`](../reports/aladdin_viralrecon_illumina_sample_report.html#fastqc_per_base_sequence_content)). You get information about adapter contamination (in [section `Adapter Content`](../reports/aladdin_viralrecon_illumina_sample_report.html#fastqc_adapter_content)) and other overrepresented sequences (in [section `Overrepresented sequences`](../reports/aladdin_viralrecon_illumina_sample_report.html#fastqc_overrepresented_sequences)). Some sections will sometimes issue warnings that your samples failed QC. It is important to remember that these QC metrics are from the raw reads, and there are often reasonable explanations why the raw RNAseq reads failed these QC. One frequent warning you might see is in the `Per Base Sequence Content` section (see below). The presence of adapter sequences at 5' or 3' end could trigger these warnings. These adapter sequences are trimmed off before alignment, so there is no need to worry about them in the raw reads. Random primers that are often used in RNAseq kits can trigger these warning too, because these primers are not truly random. Another frequent warning you might see is in the [`Per Sequence GC Content` section](../reports/aladdin_viralrecon_illumina_sample_report.html#fastqc_per_sequence_gc_content). This is because of the presence of significant amount of rRNA, which has a different GC content than rest of the genome. The presence of rRNA is not ideal, but does not prevent you from using the rest of the reads just fine, unless rRNA dominates the libraries.
 
 ### Fastp
 
-[fastp](https://github.com/OpenGene/fastp) is a tool designed to provide fast, all-in-one preprocessing for FastQ files. It has been developed in C++ with multithreading support to achieve higher performance. fastp is used in this pipeline for standard adapter trimming and quality filtering. You can have more information regarding the reads being filtered (in [section `Filtered Reads`](reports/aladdin_viralrecon_illumina_sample_report.html#fastp-filtered-reads-chart)). Other subsection of `fastp` includes:
+[fastp](https://github.com/OpenGene/fastp) is a tool designed to provide fast, all-in-one preprocessing for FastQ files. It has been developed in C++ with multithreading support to achieve higher performance. fastp is used in this pipeline for standard adapter trimming and quality filtering. You can have more information regarding the reads being filtered (in [section `Filtered Reads`](../reports/aladdin_viralrecon_illumina_sample_report.html#fastp-filtered-reads-chart)). Other subsection of `fastp` includes:
 
 - `Insert Sizes`: 
 - `Sequence Quality`: Post-trimming quality scores should remain high across all bases.
 - `GC Content`:
 - `N Content`:
 
-![MultiQC - FASTQC preprocess plot](images/aladdin-viralrecon-illumina/mqc_fastqc_plot.png)
+![MultiQC - FASTQC preprocess plot](../images/aladdin-viralrecon-illumina/mqc_fastqc_plot.png)
 
 ### Kraken2
 
@@ -69,7 +71,7 @@ Other statistics you can get from this tables are (from left to right):
 
 We use a Kraken 2 database in this workflow to filter out reads specific to the host genome before performing the de novo assembly steps in the pipeline. This filtering is not performed in the variant calling arm of the pipeline by default but Kraken 2 is still run to obtain an estimate of host reads.
 
-![MultiQC - Kraken2 dehost plot](images/aladdin-viralrecon-illumina/mqc_kraken2_plot.png)
+![MultiQC - Kraken2 dehost plot](../images/aladdin-viralrecon-illumina/mqc_kraken2_plot.png)
 
 ## Illumina: Variants calling
 
@@ -77,25 +79,25 @@ We use a Kraken 2 database in this workflow to filter out reads specific to the 
 
 [Bowtie 2](http://bio-bwa.sourceforge.net/) is an ultrafast and memory-efficient tool for aligning sequencing reads to long reference sequences. Bowtie 2 supports gapped, local, and paired-end alignment modes.
 
-![MultiQC - Bowtie2 alignment score plot](images/aladdin-viralrecon-illumina/mqc_variants_bowtie2_plot.png)
+![MultiQC - Bowtie2 alignment score plot](../images/aladdin-viralrecon-illumina/mqc_variants_bowtie2_plot.png)
 
 ### samtools
 
 Bowtie 2 BAM files are further processed with [SAMtools](http://samtools.sourceforge.net/) to sort them by coordinate, for indexing, as well as to generate read mapping statistics.
 
-![MultiQC - SAMtools alignment scores plot](images/aladdin-viralrecon-illumina/mqc_samtools_stats_plot.png)
+![MultiQC - SAMtools alignment scores plot](../images/aladdin-viralrecon-illumina/mqc_samtools_stats_plot.png)
 
 ### ivar trim
 
 [iVar](http://gensoft.pasteur.fr/docs/ivar/1.0/manualpage.html) is used to trim amplicon primer sequences from the aligned reads. iVar uses the primer positions supplied in `--primer_bed` to soft clip primer sequences from a coordinate sorted BAM file.
 
-![MultiQC - SAMtools iVar scores plot](images/aladdin-viralrecon-illumina/mqc_variants_stats_ivar_plot.png)
+![MultiQC - SAMtools iVar scores plot](../images/aladdin-viralrecon-illumina/mqc_variants_stats_ivar_plot.png)
 
 ### mosdepth
 
 [mosdepth](mosdepth) is a fast BAM/CRAM depth calculation for WGS, exome, or targeted sequencing. mosdepth is used in this pipeline to obtain genome-wide coverage values in 200bp windows and for `--protocol amplicon` to obtain amplicon/region-specific coverage metrics. The results are then either rendered in MultiQC (genome-wide coverage) or are plotted using custom `R` scripts.
 
-![MultiQC - Samples amplicon coverage heatmap ](images/aladdin-viralrecon-illumina/mqc_variants_mosdepth_plot.png)
+![MultiQC - Samples amplicon coverage heatmap ](../images/aladdin-viralrecon-illumina/mqc_variants_mosdepth_plot.png)
 
 ### iVar variants
 
@@ -103,45 +105,45 @@ Bowtie 2 BAM files are further processed with [SAMtools](http://samtools.sourcef
 
 iVar outputs a tsv format which is not compatible with downstream analysis such as annotation using SnpEff. Moreover some issues need to be addressed such as [strand-bias filtering](https://github.com/andersen-lab/ivar/issues/5) and [the consecutive reporting of variants belonging to the same codon](https://github.com/andersen-lab/ivar/issues/92). This pipeline uses a custom Python script [ivar_variants_to_vcf.py](https://github.com/nf-core/viralrecon/blob/master/bin/ivar_variants_to_vcf.py) to convert the default iVar output to VCF whilst also addressing both of these issues.
 
-![MultiQC - iVar variants called plot](images/aladdin-viralrecon-illumina/mqc_variants_ivar_plot.png)
+![MultiQC - iVar variants called plot](../images/aladdin-viralrecon-illumina/mqc_variants_ivar_plot.png)
 
 ### pangolin
 
 Phylogenetic Assignment of Named Global Outbreak LINeages ([Pangolin](https://github.com/cov-lineages/pangolin)) has been used extensively during the COVID-19 pandemic in order to to assign lineages to SARS-CoV-2 genome sequenced samples. A [web application](https://pangolin.cog-uk.io/) also exists that allows users to upload genome sequences via a web browser to assign lineages to genome sequences of SARS-CoV-2, view descriptive characteristics of the assigned lineage(s), view the placement of the lineage in a phylogeny of global samples, and view the temporal and geographic distribution of the assigned lineage(s).
 
-![MultiQC - pangolin plot](images/aladdin-viralrecon-illumina/mqc_variants_pangolin_plot.png)
+![MultiQC - pangolin plot](../images/aladdin-viralrecon-illumina/mqc_variants_pangolin_plot.png)
 
 ### Nextclade
 
 [Nextclade](https://github.com/nextstrain/nextclade) performs viral genome clade assignment, mutation calling and sequence quality checks for the consensus sequences generated in this pipeline. Similar to Pangolin, it has been used extensively during the COVID-19 pandemic. A [web application](https://clades.nextstrain.org/) also exists that allows users to upload genome sequences via a web browser.
 
-![MultiQC - Nextclade called plot](images/aladdin-viralrecon-illumina/mqc_nextclade_plot.png)
+![MultiQC - Nextclade called plot](../images/aladdin-viralrecon-illumina/mqc_nextclade_plot.png)
 
 ### Freyja
 
 [Freyja](https://github.com/andersen-lab/Freyja) is a tool to recover relative lineage abundances from mixed SARS-CoV-2 samples from a sequencing dataset (BAM aligned to the Hu-1 reference). The method uses lineage-determining mutational "barcodes" derived from the [UShER](https://usher-wiki.readthedocs.io/en/latest/#) global phylogenetic tree as a basis set to solve the constrained (unit sum, non-negative) de-mixing problem.
 
-![MultiQC - Freyja called plot](images/aladdin-viralrecon-illumina/mqc_variants_freyja_plot.png)
+![MultiQC - Freyja called plot](../images/aladdin-viralrecon-illumina/mqc_variants_freyja_plot.png)
 
 ### BCFTools
 
 [BCFtools](http://samtools.github.io/bcftools/bcftools.html) can be used to call variants directly from BAM alignment files. It is a set of utilities that manipulate variant calls in [VCF](https://vcftools.github.io/specs.html) and its binary counterpart BCF format. BCFTools is used in the variant calling and _de novo_ assembly steps of this pipeline to obtain basic statistics from the VCF output.
 
-![MultiQC - BCFTools variant counts](images/aladdin-viralrecon-illumina/mqc_bcftools_stats_plot.png)
+![MultiQC - BCFTools variant counts](../images/aladdin-viralrecon-illumina/mqc_bcftools_stats_plot.png)
 
 
 ### SnpEff
 
 [SnpEff](http://snpeff.sourceforge.net/SnpEff.html) is a genetic variant annotation and functional effect prediction toolbox. It annotates and predicts the effects of genetic variants on genes and proteins (such as amino acid changes).
 
-![MultiQC - SnpEff annotation counts](images/aladdin-viralrecon-illumina/mqc_variants_snpeff_plot.png)
+![MultiQC - SnpEff annotation counts](../images/aladdin-viralrecon-illumina/mqc_variants_snpeff_plot.png)
 
 
 ### QUAST
 
 [QUAST](http://bioinf.spbau.ru/quast) is used to generate a single report with which to evaluate the quality of the consensus sequence across all of the samples provided to the pipeline. The HTML results can be opened within any browser (we recommend using Google Chrome). Please see the [QUAST output docs](http://quast.sourceforge.net/docs/manual.html#sec3) for more detailed information regarding the output files.
 
-![MultiQC - SnpEff annotation counts](images/aladdin-viralrecon-illumina/mqc_variants_quast_plot.png)
+![MultiQC - SnpEff annotation counts](../images/aladdin-viralrecon-illumina/mqc_variants_quast_plot.png)
 
 ## Illumina: De novo Assembly 
 
@@ -149,13 +151,13 @@ Phylogenetic Assignment of Named Global Outbreak LINeages ([Pangolin](https://gi
 
 In the variant calling branch of the pipeline we are using [iVar trim](#ivar-trim) to remove primer sequences from the aligned BAM files for amplicon data. Since in the _de novo_ assembly branch we don't align the reads, we use [Cutadapt](https://cutadapt.readthedocs.io/en/stable/guide.html) as an alternative option to remove and clean the primer sequences directly from FastQ files.
 
-![MultiQC - Cutadapt filtered reads plot](images/aladdin-viralrecon-illumina/mqc_assembly_cutadapt_plot.png)
+![MultiQC - Cutadapt filtered reads plot](../images/aladdin-viralrecon-illumina/mqc_assembly_cutadapt_plot.png)
 
 ### QUAST (Spades)
 
 [QUAST](http://bioinf.spbau.ru/quast) is used to generate a single report with which to evaluate the quality of the _de novo_ assemblies across all of the samples provided to the pipeline. The HTML results can be opened within any browser (we recommend using Google Chrome). Please see the [QUAST output docs](http://quast.sourceforge.net/docs/manual.html#sec3) for more detailed information regarding the output files.
 
-![MultiQC - QUAST contig counts](images/aladdin-viralrecon-illumina/mqc_assembly_quast_plot.png)
+![MultiQC - QUAST contig counts](../images/aladdin-viralrecon-illumina/mqc_assembly_quast_plot.png)
 
 ## Pipeline Information
 
